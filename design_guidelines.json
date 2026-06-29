@@ -1,0 +1,135 @@
+{
+  "theme_and_archetype": {
+    "theme": "LIGHT",
+    "archetype": "1 (Organic & Earthy)",
+    "reasoning": "Journaling is an intimate, reflective act. We are using Archetype 1 to evoke the tactile warmth of physical paper and quiet spaces. Cold tech interfaces break this immersion. We will use an 'Editorial Minimalist' style featuring generous white space, elegant typography, and a grounded palette, fully supporting a matte dark mode.",
+    "supported_modes": ["light", "dark"]
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Cormorant Garamond",
+      "body": "Outfit",
+      "ui": "Outfit",
+      "mono": "JetBrains Mono",
+      "installation": "import { Cormorant_Garamond, Outfit, JetBrains_Mono } from 'next/font/google'; (or load via standard CSS import from Google Fonts)"
+    },
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight font-serif",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight font-serif",
+      "h3": "text-xl sm:text-2xl font-normal font-serif",
+      "h4": "text-lg sm:text-xl font-medium font-sans",
+      "body": "text-base leading-relaxed font-sans text-stone-700 dark:text-stone-300",
+      "small_label": "text-xs uppercase tracking-[0.2em] font-sans font-medium text-stone-500"
+    },
+    "rules": [
+      "Headings must use Cormorant Garamond (Serif) to provide an editorial, magazine-like feel.",
+      "Never use bold (700+) for large headings; stick to normal (400) or medium (500) for elegance.",
+      "Use Outfit (Sans) for all UI elements, buttons, and body text for readability.",
+      "The reader view for journals must be constrained to max-w-prose to ensure optimal reading line length."
+    ]
+  },
+  "colors": {
+    "light": {
+      "background": "bg-stone-50",
+      "surface": "bg-white",
+      "border": "border-stone-200",
+      "text_primary": "text-stone-900",
+      "text_secondary": "text-stone-500",
+      "text_muted": "text-stone-400",
+      "primary": "bg-stone-900 text-stone-50",
+      "primary_hover": "hover:bg-stone-800",
+      "accent": "bg-orange-100 text-orange-900",
+      "presence_online": "bg-blue-500",
+      "presence_offline": "bg-stone-800"
+    },
+    "dark": {
+      "background": "bg-stone-950",
+      "surface": "bg-stone-900",
+      "border": "border-stone-800",
+      "text_primary": "text-stone-50",
+      "text_secondary": "text-stone-400",
+      "text_muted": "text-stone-600",
+      "primary": "bg-stone-100 text-stone-900",
+      "primary_hover": "hover:bg-stone-200",
+      "accent": "bg-orange-900/30 text-orange-200 border border-orange-900/50",
+      "presence_online": "bg-blue-400",
+      "presence_offline": "bg-stone-700"
+    },
+    "rules": [
+      "Never use pure black (#000000) or pure white (#FFFFFF) for expansive backgrounds. Always tint towards Stone (warm grey).",
+      "Accent color (Terracotta/Orange) should be used strictly for subtle highlights like tags or active tab underlines, not primary buttons.",
+      "Presence dots must follow the exact requirements: Blue for online, Dark/Stone for offline."
+    ]
+  },
+  "spacing_and_layout": {
+    "system": "Tailwind standard scale with E1 generous spacing adjustments.",
+    "containers": "Use padding p-6 or p-8 inside bordered cards. Avoid cramped p-2/p-4.",
+    "feed_layout": "Bento-style or asymmetrical masonry grid for the Discover feed (grid-cols-1 md:grid-cols-2 lg:grid-cols-3) with gap-8. Do not make all cards identically sized if possible; let text dictate height or use varied row-spans.",
+    "reading_view": "Centered, max-w-2xl (max-w-prose), generous top/bottom padding (py-16 md:py-24), left-aligned text.",
+    "header": "Sticky glassmorphism. Light mode: bg-stone-50/80 backdrop-blur-xl border-b border-stone-200/50. Dark mode: bg-stone-950/80 backdrop-blur-xl border-b border-stone-800/50."
+  },
+  "components": {
+    "cards": {
+      "style": "Flat, zero shadow. 1px solid border (border-stone-200 dark:border-stone-800).",
+      "hover": "Subtle -translate-y-1 transition-transform duration-300 ease-out, border darkens (border-stone-300 dark:border-stone-600)."
+    },
+    "buttons": {
+      "style": "Rounded-none or slight rounded-md (max 6px). No pills. Solid contrast background.",
+      "interaction": "Always define hover state with lighter/darker hue. focus:ring-2 focus:ring-offset-2 focus:ring-stone-400."
+    },
+    "inputs_and_forms": {
+      "style": "Shadcn based. Minimalist. bg-transparent, border-stone-200 dark:border-stone-800. rounded-md.",
+      "rich_text_editor": "Clean, distraction-free toolbar. Use Prose styling (Tailwind Typography plugin) for the content area."
+    },
+    "navigation": {
+      "desktop": "Visible links. DO NOT hide behind a hamburger menu.",
+      "mobile": "Hamburger menu triggering a full-screen or slide-out menu with solid background.",
+      "avatar": "Circular, with a 3px absolute positioned presence dot at the bottom right."
+    },
+    "tags": {
+      "style": "Small, muted. px-2 py-1 rounded-sm text-xs font-mono uppercase tracking-wider bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300."
+    }
+  },
+  "media": {
+    "image_urls": [
+      {
+        "category": "auth_hero_illustration",
+        "url": "https://images.unsplash.com/photo-1579017308347-e53e0d2fc5e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHwyfHx3cml0aW5nJTIwam91cm5hbCUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3ODI3NTc2Nzh8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Woman writing in notebook with pen. Use this on the left side of the split-screen authentication page."
+      },
+      {
+        "category": "texture_background",
+        "url": "https://images.unsplash.com/photo-1603484477859-abe6a73f9366?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMG9yZ2FuaWMlMjB0ZXh0dXJlcyUyMHBhcGVyfGVufDB8fHx8MTc4Mjc1NzY3OHww&ixlib=rb-4.1.0&q=85",
+        "description": "Crumpled beige parchment paper. Use as a very subtle, low-opacity (opacity-5 to opacity-10) fixed background layer behind the main reading view or feed to give an organic paper feel, or mix blend mode."
+      },
+      {
+        "category": "empty_state_illustration",
+        "url": "https://images.unsplash.com/photo-1586380951230-e6703d9f6833?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MDV8MHwxfHNlYXJjaHwxfHx3cml0aW5nJTIwam91cm5hbCUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3ODI3NTc2Nzh8MA&ixlib=rb-4.1.0&q=85",
+        "description": "White notebook on white textile. Use this for 'No journal entries found' or empty profile states."
+      }
+    ],
+    "icons": {
+      "library": "lucide-react",
+      "instruction": "Use Lucide-React for all icons. Stroke width should be 1.5 for elegance."
+    }
+  },
+  "motion_and_interactions": {
+    "page_transitions": "Subtle fade in via Framer Motion. opacity: 0 -> 1, y: 10 -> 0. Duration: 0.4s ease-out.",
+    "hover_states": "Text elements should slightly dim on hover (text-stone-900 -> text-stone-600). Cards elevate slightly without casting heavy shadows.",
+    "accessibility": "Respect prefers-reduced-motion. Ensure all focus states have a visible ring."
+  },
+  "testing": {
+    "attributes": "All interactive elements (buttons, inputs, feed cards, tabs) MUST include a 'data-testid' attribute (e.g., data-testid='journal-card', data-testid='auth-submit-btn')."
+  },
+  "instructions_to_main_agent": [
+    "Follow the 'Organic & Earthy' archetype. Ensure dark mode is fully functional using tailwind 'dark:' classes.",
+    "Use Shadcn UI components for dropdowns, dialogues, tabs, and forms, but customize their classes to strip out overly 'Vercel-like' defaults (e.g., change rounded-xl to rounded-md, remove heavy box-shadows, use the border colors defined here).",
+    "Implement the rich text WYSIWYG editor using a solid library (e.g., TipTap or React Quill) styled via @tailwindcss/typography (prose classes).",
+    "On the Auth screen, use a split-screen layout on desktop: the provided 'auth_hero_illustration' on one side, and the auth tabs (Google OAuth / Email) on the other.",
+    "Integrate the presence dot dynamically: Blue (`bg-blue-500`) for online, Dark (`bg-stone-800` or `bg-stone-700` in dark mode) for offline. Position it absolute at the bottom-right of the user Avatar.",
+    "Implement feed filtering (by tags/categories) and pagination/infinite scroll as a seamless experience without page reloads where possible.",
+    "Ensure the mobile navigation collapses into a hamburger menu using Shadcn's Sheet or a custom overlay, while desktop keeps nav links fully visible.",
+    "Never use placeholder image URLs. Rely entirely on the URLs provided in the media section.",
+    "Implement comments and a report button on the single post reader view. Keep the comments UI minimal and text-focused."
+  ]
+}
