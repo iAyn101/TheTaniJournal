@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,14 @@ export default function CommentSection({ postId }) {
   const [text, setText] = useState("");
   const [posting, setPosting] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const { data } = await api.get(`/posts/${postId}/comments`);
     setComments(data);
-  };
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [postId]);
+  }, [postId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const submit = async () => {
     if (!text.trim()) return;

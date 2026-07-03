@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import api from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
@@ -16,7 +16,12 @@ export default function DiscoverPage() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const qRef = useRef(q);
   const limit = 12;
+
+  useEffect(() => {
+    qRef.current = q;
+  }, [q]);
 
   const fetchPopularTags = useCallback(async () => {
     try {
@@ -28,23 +33,26 @@ export default function DiscoverPage() {
   const fetchPosts = useCallback(async (opts = {}) => {
     setLoading(true);
     try {
-      const params = { page: opts.page ?? page, limit };
-      if (q) params.q = q;
-      if (tag) params.tag = tag;
+      const params = { page: opts.page ?? 1, limit };
+      if (opts.query) params.q = opts.query;
+      if (opts.tag) params.tag = opts.tag;
       const { data } = await api.get("/posts", { params });
       if (opts.append) setItems((prev) => [...prev, ...data.items]);
       else setItems(data.items);
       setTotal(data.total);
     } finally { setLoading(false); }
-  }, [q, tag, page]);
+  }, []);
 
   useEffect(() => { fetchPopularTags(); }, [fetchPopularTags]);
-  useEffect(() => { setPage(1); fetchPosts({ page: 1 }); /* eslint-disable-next-line */ }, [tag]);
+  useEffect(() => {
+    setPage(1);
+    fetchPosts({ page: 1, query: qRef.current, tag });
+  }, [tag, fetchPosts]);
 
   const onSearch = (e) => {
     e.preventDefault();
     setPage(1);
-    fetchPosts({ page: 1 });
+    fetchPosts({ page: 1, query: q });
   };
 
   const loadMore = async () => {
