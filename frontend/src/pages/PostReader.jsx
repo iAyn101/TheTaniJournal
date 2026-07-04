@@ -9,6 +9,18 @@ import { Flag, Pencil, Trash2, Lock, Globe, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
+const fontFamilyMap = {
+  serif: "'Georgia', serif",
+  "sans-serif": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  monospace: "'Monaco', 'Courier New', monospace",
+};
+
+const layoutStyleMap = {
+  normal: "max-w-prose mx-auto",
+  wide: "max-w-4xl mx-auto",
+  columns: "grid grid-cols-2 gap-8 max-w-5xl mx-auto",
+};
+
 function formatDate(d) {
   if (!d) return "";
   return new Date(d).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
@@ -71,10 +83,21 @@ export default function PostReader() {
 
   const isAuthor = user?.user_id === post.author_id;
 
+  const articleStyle = {
+    fontFamily: fontFamilyMap[post.font_family] || fontFamilyMap.serif,
+    backgroundColor: post.background_color || "transparent",
+    backgroundImage: post.background_image ? `url(${post.background_image})` : "none",
+    backgroundSize: "cover",
+    backgroundAttachment: "fixed",
+    padding: post.background_image || post.background_color ? "3rem 1.5rem" : "0",
+  };
+
+  const contentClassName = layoutStyleMap[post.layout_style] || layoutStyleMap.normal;
+
   return (
     <div className="min-h-screen">
       <Navbar />
-      <article className="max-w-prose mx-auto px-6 py-12 md:py-20" data-testid="post-reader">
+      <article className={`px-6 py-12 md:py-20 ${contentClassName}`} style={articleStyle} data-testid="post-reader">
         <div className="flex items-center gap-2 mb-6 text-xs uppercase tracking-[0.3em] text-stone-500">
           <span>{formatDate(post.created_at)}</span>
           <span>·</span>

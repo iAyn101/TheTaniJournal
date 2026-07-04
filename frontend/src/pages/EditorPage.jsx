@@ -10,6 +10,18 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Lock, Globe } from "lucide-react";
 
+const fontFamilyMap = {
+  serif: "'Georgia', serif",
+  "sans-serif": "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  monospace: "'Monaco', 'Courier New', monospace",
+};
+
+const layoutStyleMap = {
+  normal: "max-w-prose mx-auto",
+  wide: "max-w-4xl mx-auto",
+  columns: "grid grid-cols-2 gap-8 max-w-5xl mx-auto",
+};
+
 export default function EditorPage() {
   const { postId } = useParams();
   const navigate = useNavigate();
@@ -25,6 +37,10 @@ export default function EditorPage() {
     explicit_content: false,
     audio_urls: ["", "", ""],
     video_urls: ["", "", ""],
+    font_family: "serif",
+    layout_style: "normal",
+    background_color: "",
+    background_image: "",
   });
 
   useEffect(() => {
@@ -41,6 +57,10 @@ export default function EditorPage() {
           explicit_content: data.explicit_content || false,
           audio_urls: [...(data.audio_urls || []), "", "", ""].slice(0, 3),
           video_urls: [...(data.video_urls || []), "", "", ""].slice(0, 3),
+          font_family: data.font_family || "serif",
+          layout_style: data.layout_style || "normal",
+          background_color: data.background_color || "",
+          background_image: data.background_image || "",
         });
       } catch {
         toast.error("Could not load post");
@@ -80,6 +100,10 @@ export default function EditorPage() {
         explicit_content: form.explicit_content,
         audio_urls: form.audio_urls.filter(Boolean),
         video_urls: form.video_urls.filter(Boolean),
+        font_family: form.font_family,
+        layout_style: form.layout_style,
+        background_color: form.background_color.trim(),
+        background_image: form.background_image.trim(),
       };
       let res;
       if (editing) res = await api.put(`/posts/${postId}`, payload);
@@ -160,6 +184,58 @@ export default function EditorPage() {
                 Explicit content
               </Label>
             </div>
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-6 mt-8">
+          <div>
+            <Label htmlFor="ed-font" className="text-xs uppercase tracking-[0.2em] text-stone-500 block mb-2">Font family</Label>
+            <select
+              id="ed-font"
+              value={form.font_family}
+              onChange={(e) => setForm({ ...form, font_family: e.target.value })}
+              className="w-full rounded-md border border-stone-200 dark:border-stone-800 bg-transparent px-3 py-2 text-sm"
+              data-testid="editor-font"
+            >
+              <option value="serif">Serif (Elegant)</option>
+              <option value="sans-serif">Sans-serif (Modern)</option>
+              <option value="monospace">Monospace (Code)</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="ed-layout" className="text-xs uppercase tracking-[0.2em] text-stone-500 block mb-2">Layout style</Label>
+            <select
+              id="ed-layout"
+              value={form.layout_style}
+              onChange={(e) => setForm({ ...form, layout_style: e.target.value })}
+              className="w-full rounded-md border border-stone-200 dark:border-stone-800 bg-transparent px-3 py-2 text-sm"
+              data-testid="editor-layout"
+            >
+              <option value="normal">Normal (Center)</option>
+              <option value="wide">Wide (Full width)</option>
+              <option value="columns">Columns (2-column)</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="ed-bg-color" className="text-xs uppercase tracking-[0.2em] text-stone-500 block mb-2">Background color</Label>
+            <Input
+              id="ed-bg-color"
+              type="color"
+              value={form.background_color}
+              onChange={(e) => setForm({ ...form, background_color: e.target.value })}
+              className="h-10 rounded-md cursor-pointer"
+              data-testid="editor-bg-color"
+            />
+          </div>
+          <div>
+            <Label htmlFor="ed-bg-img" className="text-xs uppercase tracking-[0.2em] text-stone-500 block mb-2">Background image URL</Label>
+            <Input
+              id="ed-bg-img"
+              value={form.background_image}
+              onChange={(e) => setForm({ ...form, background_image: e.target.value })}
+              placeholder="Background image URL (optional)"
+              className="rounded-md bg-transparent border-stone-200 dark:border-stone-800"
+              data-testid="editor-bg-img"
+            />
           </div>
         </div>
         <div className="grid gap-4 mt-6">
