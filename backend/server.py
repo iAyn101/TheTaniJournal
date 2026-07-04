@@ -25,6 +25,8 @@ from urllib.parse import urlencode
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Local media storage for cover images, audio, video uploads
+# Media files are served statically from /media/ route
 MEDIA_DIR = ROOT_DIR / 'media'
 MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -308,6 +310,11 @@ def fetch_google_userinfo(access_token: str) -> dict:
 
 
 def save_uploaded_file(upload_file: UploadFile) -> str:
+    """Save uploaded file to local media directory.
+    
+    Files are stored in backend/media/ and served via /media/ static route.
+    Returns URL path for access.
+    """
     file_name = f"{uuid.uuid4().hex}_{Path(upload_file.filename).name}"
     file_path = MEDIA_DIR / file_name
     with file_path.open("wb") as buffer:
