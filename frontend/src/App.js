@@ -12,6 +12,7 @@ import EditorPage from "@/pages/EditorPage";
 import Dashboard from "@/pages/Dashboard";
 import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
+import AdminPage from "@/pages/AdminPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
@@ -32,6 +33,7 @@ function AppRouter() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editor" element={<EditorPage />} />
         <Route path="/editor/:postId" element={<EditorPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

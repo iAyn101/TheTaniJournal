@@ -72,6 +72,19 @@ export default function Navbar() {
               >
                 Settings
               </NavLink>
+              {user.is_admin && (
+                <NavLink
+                  to="/admin"
+                  data-testid="nav-admin"
+                  className={({ isActive }) =>
+                    `px-3 py-2 text-sm transition-colors ${
+                      isActive ? "text-foreground" : "text-stone-500 hover:text-foreground"
+                    }`
+                  }
+                >
+                  Admin
+                </NavLink>
+              )}
             </>
           )}
         </nav>
@@ -143,6 +156,9 @@ export default function Navbar() {
                 {user && (
                   <>
                     <Link to="/dashboard" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-dashboard">Dashboard</Link>
+                        {user.is_admin && (
+                          <Link to="/admin" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-admin">Admin</Link>
+                        )}
                     <Link to="/settings" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-settings">Settings</Link>
                     <Link to="/editor" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-new">New entry</Link>
                     <Link to={`/profile/${user.user_id}`} onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-profile">Profile</Link>
