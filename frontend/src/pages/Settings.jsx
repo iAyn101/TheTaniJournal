@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -82,9 +83,29 @@ export default function Settings() {
               <Button variant="outline" onClick={sendReconnectEmail} disabled={sending}>{sending ? "Sending..." : "Email me reconnect link"}</Button>
             </div>
           ) : (
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
               <Button onClick={reconnectDrive}>Re-request refresh token</Button>
-              <Button variant="outline" onClick={disconnectDrive}>Disconnect Drive</Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">Disconnect Drive</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Disconnect Google Drive</DialogTitle>
+                  </DialogHeader>
+                  <p className="text-sm text-stone-600">
+                    Are you sure you want to disconnect Google Drive? This will stop backups and remove Drive access from your account.
+                  </p>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline" className="rounded-md">Cancel</Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button onClick={disconnectDrive} className="rounded-md">Disconnect</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           )}
         </div>

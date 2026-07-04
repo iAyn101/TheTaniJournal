@@ -49,17 +49,30 @@ export default function Navbar() {
             </NavLink>
           ))}
           {user && (
-            <NavLink
-              to="/dashboard"
-              data-testid="nav-dashboard"
-              className={({ isActive }) =>
-                `px-3 py-2 text-sm transition-colors ${
-                  isActive ? "text-foreground" : "text-stone-500 hover:text-foreground"
-                }`
-              }
-            >
-              Dashboard
-            </NavLink>
+            <>
+              <NavLink
+                to="/dashboard"
+                data-testid="nav-dashboard"
+                className={({ isActive }) =>
+                  `px-3 py-2 text-sm transition-colors ${
+                    isActive ? "text-foreground" : "text-stone-500 hover:text-foreground"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/settings"
+                data-testid="nav-settings"
+                className={({ isActive }) =>
+                  `px-3 py-2 text-sm transition-colors ${
+                    isActive ? "text-foreground" : "text-stone-500 hover:text-foreground"
+                  }`
+                }
+              >
+                Settings
+              </NavLink>
+            </>
           )}
         </nav>
 
@@ -130,6 +143,7 @@ export default function Navbar() {
                 {user && (
                   <>
                     <Link to="/dashboard" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-dashboard">Dashboard</Link>
+                    <Link to="/settings" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-settings">Settings</Link>
                     <Link to="/editor" onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-new">New entry</Link>
                     <Link to={`/profile/${user.user_id}`} onClick={() => setOpen(false)} className="text-2xl font-serif py-3 border-b border-stone-200 dark:border-stone-800" data-testid="mobile-profile">Profile</Link>
                     <button onClick={async () => { setOpen(false); await handleLogout(); }} className="text-2xl font-serif py-3 text-left text-stone-500" data-testid="mobile-logout">Sign out</button>
