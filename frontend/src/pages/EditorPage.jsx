@@ -22,6 +22,9 @@ export default function EditorPage() {
     cover_image: "",
     tags: "",
     is_public: false,
+    explicit_content: false,
+    audio_urls: ["", "", ""],
+    video_urls: ["", "", ""],
   });
 
   useEffect(() => {
@@ -35,11 +38,33 @@ export default function EditorPage() {
           cover_image: data.cover_image || "",
           tags: (data.tags || []).join(", "),
           is_public: data.is_public,
+          explicit_content: data.explicit_content || false,
+          audio_urls: [...(data.audio_urls || []), "", "", ""].slice(0, 3),
+          video_urls: [...(data.video_urls || []), "", "", ""].slice(0, 3),
         });
-      } catch { toast.error("Could not load post"); navigate("/dashboard"); }
-      finally { setLoading(false); }
+      } catch {
+        toast.error("Could not load post");
+        navigate("/dashboard");
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [postId, editing, navigate]);
+
+  const uploadCoverImage = async (file) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const { data } = await api.post("/media/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setForm((prev) => ({ ...prev, cover_image: data.url }));
+      toast.success("Cover image uploaded");
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || "Upload failed");
+    }
+  };
 
   const save = async () => {
     if (!form.title.trim()) { toast.error("Title is required"); return; }
@@ -52,6 +77,9 @@ export default function EditorPage() {
         cover_image: form.cover_image.trim(),
         tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
         is_public: form.is_public,
+        explicit_content: form.explicit_content,
+        audio_urls: form.audio_urls.filter(Boolean),
+        video_urls: form.video_urls.filter(Boolean),
       };
       let res;
       if (editing) res = await api.put(`/posts/${postId}`, payload);
@@ -80,16 +108,29 @@ export default function EditorPage() {
           data-testid="editor-title"
           style={{ fontFamily: "Cormorant Garamond, Georgia, serif" }}
         />
-        <Input
-          value={form.cover_image}
-          onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
-          placeholder="Cover image URL (optional)"
-          className="border-0 px-0 placeholder:text-stone-400 focus-visible:ring-0 mb-6 bg-transparent text-sm"
-          data-testid="editor-cover"
-        />
-        {form.cover_image && (
-          <img src={form.cover_image} alt="cover preview" className="mb-6 aspect-[16/9] object-cover rounded-md w-full" />
-        )}
+        <div className="mb-6">
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="editor-cover" className="text-xs uppercase tracking-[0.2em] text-stone-500">Cover image (URL or upload)</Label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => uploadCoverImage(e.target.files?.[0])}
+              className="text-sm text-stone-500"
+              data-testid="editor-cover-upload"
+            />
+          </div>
+          <Input
+            id="editor-cover"
+            value={form.cover_image}
+            onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
+            placeholder="Cover image URL (optional)"
+            className="border-0 px-0 placeholder:text-stone-400 focus-visible:ring-0 mt-3 bg-transparent text-sm"
+            data-testid="editor-cover"
+          />
+          {form.cover_image && (
+            <img src={form.cover_image} alt="cover preview" className="mt-4 mb-6 aspect-[16/9] object-cover rounded-md w-full" />
+          )}
+        </div>
 
         <RichTextEditor value={form.content} onChange={(v) => setForm({ ...form, content: v })} />
 
@@ -113,6 +154,48 @@ export default function EditorPage() {
                 {form.is_public ? <><Globe className="h-3.5 w-3.5" strokeWidth={1.5} /> Public</> : <><Lock className="h-3.5 w-3.5" strokeWidth={1.5} /> Private</>}
               </Label>
             </div>
+            <div className="flex items-center gap-3 py-2">
+              <Switch checked={form.explicit_content} onCheckedChange={(v) => setForm({ ...form, explicit_content: v })} data-testid="editor-explicit-toggle" id="explicit" />
+              <Label htmlFor="explicit" className="inline-flex items-center gap-1.5 cursor-pointer text-sm text-stone-500">
+                Explicit content
+              </Label>
+            </div>
+          </div>
+        </div>
+        <div className="grid gap-4 mt-6">
+          <div>
+            <Label className="text-xs uppercase tracking-[0.2em] text-stone-500 mb-2">Audio URLs</Label>
+            {form.audio_urls.map((url, index) => (
+              <Input
+                key={`audio-${index}`}
+                value={url}
+                onChange={(e) => {
+                  const next = [...form.audio_urls];
+                  next[index] = e.target.value;
+                  setForm({ ...form, audio_urls: next });
+                }}
+                placeholder={index === 0 ? "Audio URL" : "Optional audio URL"}
+                className="mt-2 rounded-md bg-transparent border-stone-200 dark:border-stone-800"
+                data-testid={`editor-audio-${index}`}
+              />
+            ))}
+          </div>
+          <div>
+            <Label className="text-xs uppercase tracking-[0.2em] text-stone-500 mb-2">Video URLs</Label>
+            {form.video_urls.map((url, index) => (
+              <Input
+                key={`video-${index}`}
+                value={url}
+                onChange={(e) => {
+                  const next = [...form.video_urls];
+                  next[index] = e.target.value;
+                  setForm({ ...form, video_urls: next });
+                }}
+                placeholder={index === 0 ? "Video URL" : "Optional video URL"}
+                className="mt-2 rounded-md bg-transparent border-stone-200 dark:border-stone-800"
+                data-testid={`editor-video-${index}`}
+              />
+            ))}
           </div>
         </div>
 

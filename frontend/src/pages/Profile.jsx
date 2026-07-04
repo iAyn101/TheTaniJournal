@@ -59,6 +59,26 @@ export default function Profile() {
     finally { setSaving(false); }
   };
 
+  const connectDrive = async () => {
+    try {
+      const { data } = await api.get("/auth/google/url");
+      window.location.href = data.url;
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || "Failed to start Google Drive connect");
+    }
+  };
+
+  const disconnectDrive = async () => {
+    try {
+      const { data } = await api.post("/auth/google/disconnect");
+      setProfile(data.user);
+      if (setUser) setUser(data.user);
+      toast.success("Drive disconnected");
+    } catch {
+      toast.error("Failed to disconnect Drive");
+    }
+  };
+
   if (loading) return (
     <div className="min-h-screen"><Navbar /><div className="flex justify-center py-32"><Loader2 className="h-6 w-6 animate-spin text-stone-400" /></div></div>
   );
@@ -112,6 +132,16 @@ export default function Profile() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+            )}
+            {isMe && (
+              <div className="mt-4">
+                <div className="text-sm text-stone-600 mb-2">Google Drive: {profile.drive_connected ? <span className="text-green-600">Connected</span> : <span className="text-stone-500">Not connected</span>}</div>
+                {!profile.drive_connected ? (
+                  <Button onClick={connectDrive} className="rounded-md" data-testid="drive-connect-btn">Connect Google Drive</Button>
+                ) : (
+                  <Button variant="outline" onClick={disconnectDrive} className="rounded-md" data-testid="drive-disconnect-btn">Disconnect Drive</Button>
+                )}
+              </div>
             )}
           </div>
         </div>

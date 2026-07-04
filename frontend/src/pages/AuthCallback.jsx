@@ -14,30 +14,27 @@ export default function AuthCallback() {
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
-    const hash = window.location.hash || "";
-    const m = hash.match(/session_id=([^&]+)/);
-    if (!m) {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (!code) {
       navigate("/auth", { replace: true });
       return;
     }
-    const sessionId = m[1];
 
     (async () => {
       try {
-        const { data } = await api.post("/auth/google/session", null, {
-          headers: { "X-Session-ID": sessionId },
-        });
+        const { data } = await api.post("/auth/google/callback", { code });
         if (data.session_token) {
           localStorage.setItem("tani_token", data.session_token);
         }
         if (setUser) setUser(data.user);
         else await refresh();
         toast.success(`Welcome, ${data.user.name}`);
-        // clear hash and navigate
+        // clear query and navigate
         window.history.replaceState(null, "", window.location.pathname);
         navigate("/dashboard", { replace: true, state: { user: data.user } });
       } catch (e) {
-        toast.error("Sign in failed");
+        toast.error(e?.response?.data?.detail || "Sign in failed");
         navigate("/auth", { replace: true });
       }
     })();

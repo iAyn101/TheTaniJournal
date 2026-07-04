@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // If returning from OAuth callback, skip /me; AuthCallback will handle it
-    if (window.location.hash?.includes("session_id=")) {
+    if (window.location.hash?.includes("session_id=") || window.location.search?.includes("code=")) {
       setLoading(false);
       return;
     }

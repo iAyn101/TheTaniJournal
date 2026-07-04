@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import api from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -19,10 +20,16 @@ export default function AuthPage() {
   const [signin, setSignin] = useState({ email: "", password: "" });
   const [signup, setSignup] = useState({ name: "", email: "", password: "" });
 
-  const handleGoogle = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-    const redirectUrl = window.location.origin + "/dashboard";
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  const handleGoogle = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get("/auth/google/url");
+      window.location.href = data.url;
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || "Google sign in failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignin = async (e) => {

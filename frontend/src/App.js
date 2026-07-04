@@ -11,13 +11,14 @@ import PostReader from "@/pages/PostReader";
 import EditorPage from "@/pages/EditorPage";
 import Dashboard from "@/pages/Dashboard";
 import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 function AppRouter() {
   const location = useLocation();
-  // Detect session_id in URL fragment synchronously (race-condition safe)
-  if (location.hash?.includes("session_id=")) {
+  // Detect OAuth callback query or legacy session hash synchronously
+  if (location.hash?.includes("session_id=") || location.search?.includes("code=")) {
     return <AuthCallback />;
   }
   return (
@@ -31,6 +32,7 @@ function AppRouter() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editor" element={<EditorPage />} />
         <Route path="/editor/:postId" element={<EditorPage />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>
   );
